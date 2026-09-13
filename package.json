@@ -1,0 +1,57 @@
+{
+  "name": "babylonjs-offline-game",
+  "version": "1.0.0",
+  "description": "A BabylonJS-powered offline game built with Parcel and Webpack.",
+  "type": "module",
+  "scripts": {
+    "prepare-assets": "node build-assets.js",
+    "prepare-assets-wp": "node build-assets.js dist-wp",
+    "start": "npm run clean-assets && npm run prepare-assets && npm run build && start dist/index.html",
+    "_build": "esbuild src/engine/Game.ts --bundle --outfile=dist/Game.js --minify",
+    "build": "node build.js",
+    "build-wp": "npm run prepare-assets-wp && webpack --config webpack.config.js --output-path dist-wp",
+    "zip": "npm run prepare-assets-wp && webpack --config webpack.config.js --output-path dist-wp && powershell Compress-Archive -Path dist-wp -DestinationPath dist-wp.zip -Update",
+    "zip-parcel": "npm run prepare-assets && npm run build && powershell Compress-Archive -Path dist -DestinationPath dist.zip -Update",
+    "clean": "powershell -Command \"Remove-Item -Path 'dist', 'dist.zip', 'dist-wp', 'dist-wp.zip', '.parcel-cache' -Recurse -Force -ErrorAction SilentlyContinue\"",
+    "clean-assets": "powershell -Command \"Remove-Item -Path 'dist' -Recurse -Force -ErrorAction SilentlyContinue\""
+  },
+  "targets": {
+    "default": {
+      "source": "src/engine/Game.ts",
+      "distDir": "dist",
+      "publicUrl": "./",
+      "includeNodeModules": {
+        "@babylonjs/core": true,
+        "@babylonjs/loaders": true,
+        "cannon-es": true
+      }
+    }
+  },
+  "keywords": [
+    "babylonjs",
+    "game",
+    "offline",
+    "webpack",
+    "parcel"
+  ],
+  "author": "Soumyadeep Das",
+  "license": "ISC",
+  "dependencies": {
+    "@babylonjs/core": "^8.18.0",
+    "@babylonjs/loaders": "^8.18.0",
+    "cannon-es": "^0.20.0",
+    "mime-types": "^3.0.1",
+    "parcel": "^2.15.4"
+  },
+  "devDependencies": {
+    "@babylonjs/inspector": "^8.18.0",
+    "@types/cannon": "^0.1.13",
+    "@types/mime-types": "^3.0.1",
+    "@types/wicg-file-system-access": "^2023.10.6",
+    "esbuild": "^0.25.8",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^6.0.1"
+  }
+}
